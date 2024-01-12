@@ -1,3 +1,24 @@
 body {
     background-color: black;
 }
+
+button {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    border: none;
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(13, 40px);
+    grid-template-rows: auto;
+    grid-gap: 5px;
+}
+
+.gallows__img {
+    width: 300px;
+    height: 400px;
+}
