@@ -105,6 +105,7 @@ export class Game {
     this.counter.textContent = `You have attempts left: ${this.countError} / 6`;
     this.createEmptyField();
     this.updateTitle();
+    this.img.image.setAttribute('src', `./images/${this.img.img[0]}`)
   }
 
   // создание области для вопроса
