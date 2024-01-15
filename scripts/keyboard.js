@@ -1,21 +1,17 @@
 export class Keyboard {
   constructor(alphabet) {
     this.alphabet = alphabet;
-    this.inputField = document.createElement('input');
+    this.letter = '';
     this.keyboard = document.createElement('div');
     this.keyboard.className = 'letters';
-    this.initializeButtons();
-    document.body.appendChild(this.inputField);
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
   createButton(letter) {
     const button = document.createElement('button');
     button.textContent = letter;
+    button.className = "letter__btn ";
+    
     this.keyboard.appendChild(button);
-    button.addEventListener('click', () => {
-      this.inputField.value += letter;
-    });
   }
 
   initializeButtons() {
@@ -25,7 +21,7 @@ export class Keyboard {
   }
 
   handleKeyDown(event) {
-    const key = event.key.toUpperCase();
+    const key = event.key;
     if (this.alphabet.includes(key)) {
       this.inputField.value += key;
     }
@@ -35,10 +31,9 @@ export class Keyboard {
     const section = document.createElement('section');
     section.className = 'keyboard__section section';
     section.append(this.keyboard);
+    this.initializeButtons();
     return section;
   }
 }
 
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const myKeyboard = new Keyboard(alphabet);
-document.body.append(myKeyboard.renderKeyboard());
+export const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
