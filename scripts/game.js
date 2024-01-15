@@ -9,13 +9,14 @@ export class Game {
     this.modal = modal;
     this.img = img;
     this.keyboard = keyboard;
+    this.play = gameArr;
     this.app = null;
     this.field = null;
-    this.question = '';
+    this.word = '';
     this.counter = null;
     this.answer = [];
     this.countError = 0;
-    this.riddle = '';
+    this.question = '';
     this.title = null;
   }
 
@@ -38,18 +39,23 @@ export class Game {
 
   // метод для определения рандомного слова и соответствующего вопроса
   createEmptyField() {
-    const randomIndex = this.game[Math.floor(Math.random() * this.game.length)];
-    this.question = randomIndex.word;
-    this.riddle = randomIndex.question;
+    if (this.play.length > 0) {
+      const randomIndex = this.play[Math.floor(Math.random() * this.play.length)];
+      this.word = randomIndex.word;
+      this.question = randomIndex.question;
+      this.play = this.play.filter((item) => item.word !== randomIndex.word);
+    } else {
+      this.modal.showEndModal();
+      this.play = this.game;
+      this.reset();
+    }
 
-    //  const letterValue = gameKeyboard.letter; // получаем значение из переменной this.letter
-    // console.log(letterValue);
-    console.log(`Ответ - ${this.question}`);
+    console.log(`Ответ - ${this.word}`);
 
-    this.answer = new Array(this.question.length).fill('_')
+    this.answer = new Array(this.word.length).fill('_')
     this.field.innerHTML = ''
 
-    for (let i = 0; i < this.question.length; i++) {
+    for (let i = 0; i < this.word.length; i++) {
       const span = document.createElement('span');
       span.textContent = '_';
       span.className = 'letter__span';
@@ -111,15 +117,14 @@ export class Game {
   // создание области для вопроса
   createQuestion() {
     const questionBlock = document.createElement('h1');
-    questionBlock.textContent = this.riddle;
+    questionBlock.textContent = this.question;
     questionBlock.className = 'question';
     this.title = questionBlock;
-    document.body.append(questionBlock);
     return questionBlock;
   }
 
   updateTitle() {
-    this.title.textContent = this.riddle;
+    this.title.textContent = this.question;
   }
 
   checkLetter(letter) {
@@ -128,21 +133,21 @@ export class Game {
       return;
     }
 
-    if (this.countError >= 5) {
-      this.modal.showLoseModal(this.question);
+    if (this.countError >= 6) {
+      this.modal.showLoseModal(this.word);
       this.modal.resetButton.addEventListener('click', (e) => {
         this.reset();
       })
     }
 
-    if (!this.question.includes(key)) {
+    if (!this.word.includes(key)) {
       this.increaseError();
       this.updateImgSrc();
       return;
     }
 
-    for (let i = 0; i < this.question.length; i++) {
-      if (this.question[i] === key) {
+    for (let i = 0; i < this.word.length; i++) {
+      if (this.word[i] === key) {
         this.answer[i] = key;
       }
     }
@@ -150,7 +155,7 @@ export class Game {
     this.updateField()
 
     if (!this.answer.includes('_')) {
-      this.modal.showWinModal(this.question);
+      this.modal.showWinModal(this.word);
       this.modal.resetButton.addEventListener('click', (e) => {
         this.reset();
       })
