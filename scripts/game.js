@@ -18,6 +18,7 @@ export class Game {
     this.countError = 0;
     this.question = '';
     this.title = null;
+    this.letter = [];
   }
 
   // Создание основной секции.
@@ -102,7 +103,8 @@ export class Game {
     app.append(this.createCountError());
     document.body.append(app);
 
-    this.inputLetter();
+    this.clickButton();
+    this.keyDownButton();
   }
 
   // обновление контента
@@ -112,6 +114,15 @@ export class Game {
     this.createEmptyField();
     this.updateTitle();
     this.img.image.setAttribute('src', `./images/${this.img.img[0]}`)
+    this.letter = [];
+
+    const letter = document.querySelectorAll('.letter__btn');
+
+    letter.forEach((el) => {
+      if (el.classList.contains('disable__btn')) {
+        el.classList.remove('disable__btn');
+      }
+    });
   }
 
   // создание области для вопроса
@@ -162,17 +173,38 @@ export class Game {
     }
   }
 
-  inputLetter() {
-    const buttonsLetter = document.querySelectorAll('.letter__btn ');
+  clickButton() {
+    const buttonsLetter = document.querySelectorAll('.letter__btn');
 
     buttonsLetter.forEach((button) => {
       button.addEventListener('click', (event) => {
         const letter = event.target.textContent;
+        event.target.classList.add("disable__btn");
+        if (this.letter.includes(letter)) {
+          return;
+        }
+        this.letter.push(letter);
         this.checkLetter(letter);
       })
     })
+  }
+
+  keyDownButton() {
+    const buttonsLetter = document.querySelectorAll('.letter__btn');
 
     document.body.addEventListener('keydown', (e) => {
+      const letter = e.key;
+      if (this.letter.includes(letter.toUpperCase())) {
+        return;
+      }
+
+      buttonsLetter.forEach((el) => {
+        if (el.textContent === e.key.toUpperCase()) {
+          el.classList.add("disable__btn");
+          this.letter.push(el.textContent.toUpperCase());
+        }
+      });
+
       this.checkLetter(e.key.toUpperCase());
     })
   }
