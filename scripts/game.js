@@ -144,7 +144,7 @@ export class Game {
       return;
     }
 
-    if (this.countError >= 6) {
+    if (this.countError >= 5) {
       this.modal.showLoseModal(this.word);
       this.modal.resetButton.addEventListener('click', (e) => {
         this.reset();
